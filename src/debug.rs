@@ -4,13 +4,17 @@ use bevy::{
 
 use super::{
     GameEntity,
-    Player,
+    EntityType
 };
 
 pub fn player_tracker(
-    player: Res<Player>
+    mut entities: Query<&mut GameEntity>
 ) {
-    info!("Player Location: X: {} Y: {} Z: {}", player.location.x, player.location.y, player.location.z);
+    for ent in entities.iter_mut() {
+        if ent.entity_type == EntityType::PlayerType {
+            info!("Player Location: X: {} Y: {} Z: {}", ent.position.x, ent.position.y, ent.position.z);
+        }
+    }
 }
 
 pub fn draw_collision(

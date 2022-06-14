@@ -5,9 +5,10 @@ use bevy::{
 
 use super::{
     Mesh,
-    Player,
     default,
-    Vec3
+    Vec3,
+    GameEntity,
+    EntityType
 };
 
 struct TextureMap {
@@ -23,7 +24,7 @@ pub struct Game {
     pub height: f32,
     pub width: f32,
 
-    pub players: Vec<Player>
+    pub players: Vec<GameEntity>
 }
 impl Game {
     pub fn new(

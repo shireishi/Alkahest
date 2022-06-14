@@ -32,14 +32,12 @@ use bevy::{
 };
 
 mod invs;
-mod player;
 mod world;
 mod tools;
 mod object;
 mod entity;
 mod debug;
 
-use player::*;
 use tools::*;
 use invs::*;
 use world::*;
@@ -125,34 +123,42 @@ fn resize_window(
 fn keyboard_input_system(
     _commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
-    mut player: ResMut<Player>,
+    mut entities: Query<&mut GameEntity>,
     mut _game_state: ResMut<State<GameState>>,
     mut transforms: Query<&mut Transform>
 ) { 
+    let mut player: GameEntity = GameEntity::new(EntityType::Unknown);
+
+    // for ent in entities.iter_mut() {
+    //     if ent.entity_type == EntityType::PlayerType {
+    //         player = *ent.into_inner();
+    //     }
+    // } 
+
     let mut moved: bool = false;
 
     if keyboard_input.pressed(KeyCode::W) {
-        player.location.y += STEP;
+        player.position.y += STEP;
         moved = true;
     }
     if keyboard_input.pressed(KeyCode::A) {
-        player.location.x -= STEP;
+        player.position.x -= STEP;
         moved = true;
     }
     if keyboard_input.pressed(KeyCode::S) {
-        player.location.y -= STEP;
+        player.position.y -= STEP;
         moved = true;
     }
     if keyboard_input.pressed(KeyCode::D) {
-        player.location.x += STEP;
+        player.position.x += STEP;
         moved = true;
     }
     
     if moved {
         *transforms.get_mut(player.entity.unwrap()).unwrap() = Transform {
             translation: Vec3::new(
-                player.location.x as f32,
-                player.location.y as f32,
+                player.position.x as f32,
+                player.position.y as f32,
                 0f32
             ),
             ..default()
@@ -162,12 +168,12 @@ fn keyboard_input_system(
 
 fn check_collision(
     _commands: Commands,
-    mut players: Query<&mut Player>,
+    mut entities: Query<&mut GameEntity>,
     _objects: Res<GameObject>,
     _entities: Res<GameEntity>
 ) {
-    for player in players.iter_mut() {
-        info!("{:?}", player.location);
+    for entity in entities.iter_mut() {
+        info!("{:?}", entity.position);
     }
 }
 
@@ -194,7 +200,10 @@ fn main() {
     let app_name: String = std::format!("Alkahest - {}", welcome_messages[rand_value]);
 
     let inventory: Vec<Item> = Vec::with_capacity(27usize);
-    let player: Player = Player::new(inventory);
+    let mut player: GameEntity = GameEntity::new(EntityType::PlayerType);
+    player.add_inventory(inventory);
+    // let mut player: GameEntity = GameEntity::new(EntityType::PlayerType);
+    // player.entity_Type::PlayerType = Player::new(inventory);
 
     let game: Game = Game::new(HEIGHT, WIDTH);
 
@@ -235,35 +244,38 @@ fn main() {
         .add_system_set(
             SystemSet::on_update(GameState::Playing)
                 // .with_system(player_tracker)
-                .with_system(keyboard_input_system)
+                // .with_system(keyboard_input_system)
                 // .with_system(check_collision)
         )
         .run();
 }
 
-fn setup(
+fn setup<'a>(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut player: ResMut<Player>
+    mut player: ResMut<GameEntity>
 ) {
     // let (r, g, b) = from_hex("00cc00".to_string()); //debug color
 
+    // todo: design a modular texture system for the player and object textures
     let background_texture: Handle<Image> = asset_server.load("background.png");
     let player_texture: Handle<Image> = asset_server.load("sex_idle.png");
 
+    // modify the game values
     commands.spawn();
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     commands.insert_resource(BackgroundHandle::new(background_texture));
-    
-    player.add_handle(player_texture.clone());
+
+    // modify player values
+    player.handle = player_texture.clone();
     
     player.entity = Some(
         commands
         .spawn_bundle(TransformBundle::from(Transform {
                 translation: Vec3::new(
-                    player.location.x as f32,
-                    player.location.y as f32,
+                    player.position.x as f32,
+                    player.position.y as f32,
                     1f32
                 ),
                 ..default()
@@ -284,7 +296,7 @@ fn setup_bounds(
     mut app_state: ResMut<State<GameState>>,
     mut event_asset: EventReader<AssetEvent<Image>>,
     assets: Res<Assets<Image>>,
-    mut player: ResMut<Player>,
+    mut ent: ResMut<GameEntity>,
     bg: ResMut<BackgroundHandle>
 ) {
     for event in event_asset.iter() {
@@ -302,10 +314,11 @@ fn setup_bounds(
                     commands.insert_resource(bg_size);
                     app_state.set(GameState::Menu).unwrap();
                 }
-                if *handle == player.handle {
-                    let img = assets.get(player.handle.clone()).unwrap();
-                    player.dimensions = [img.texture_descriptor.size.height, img.texture_descriptor.size.width];
-                    info!("{:?}", player.clone());
+                if *handle == ent.handle {
+                    let img = assets.get(ent.handle.clone()).unwrap();
+                    ent.height = img.texture_descriptor.size.height as u32;
+                    ent.width = img.texture_descriptor.size.width as u32;
+                    info!("{:?}", ent.clone());
                 }
             },
             _ => {

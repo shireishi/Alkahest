@@ -15,5 +15,6 @@ use super::{
 pub struct GameObject {
     id: u32,
     location: Location,
-    dimensions: Vec2
+    height: u32,
+    width: u32
 }

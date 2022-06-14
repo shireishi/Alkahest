@@ -9,7 +9,11 @@ use std::{io, fmt, option, vec};
 
 pub static mut ITEM_VECTOR: Vec<Item> = Vec::new();
 
-pub fn gen_hash(data: String) -> String {
+pub fn new() -> Vec<Item> {
+    Vec::new()
+}
+
+fn gen_hash(data: String) -> String {
     let char_vec: Vec<char> = data.chars().collect();
     let vec_size: usize = char_vec.len();
     let mut hex_vec: Vec<String> = Vec::with_capacity(vec_size);
@@ -22,7 +26,7 @@ pub fn gen_hash(data: String) -> String {
     String::from(hex_vec.join(""))
 }
 
-pub fn generate_attributes(attrs: Vec<ItemAttributes>) -> u8 {
+fn generate_attributes(attrs: Vec<ItemAttributes>) -> u8 {
     let mut return_value: u8 = 0;
 
     for attr in attrs {
@@ -90,23 +94,4 @@ impl fmt::Debug for Item {
             .finish()
     }
 }
-
-// fn main() {
-//     let mut inventory: Vec<Item> = Vec::with_capacity(27usize);
-//     let diamond_sword: Item = Item::new(
-//         String::from("Diamond Sword"),
-//         vec![ItemAttributes::Sword, ItemAttributes::Shield]
-//     );
-//     let second_diamond_sword: Item = Item::new(
-//         String::from("Diamond Sword"),
-//         vec![ItemAttributes::Sword, ItemAttributes::Shield]
-//     );
-
-//     inventory.push(diamond_sword);
-//     inventory.push(second_diamond_sword);
-
-//     println!("Inventory Contents:\n{:?}", inventory);
-//     println!("");
-//     unsafe { println!("All Items:\n{:?}", ITEM_VECTOR); };
-    
-// }
+// todo: write a display implementation for Item

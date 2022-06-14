@@ -1,46 +1,53 @@
 use bevy::{
-    prelude::*
+    prelude::*, ecs::query::WorldQuery
 };
+
+use crate::world::Game;
 
 use super::{
     Location,
-    Player
+    invs
 };
 
-#[derive(Component, PartialEq, Eq)]
+#[derive(Component, PartialEq, Eq, Clone, Debug, Copy)]
 pub enum EntityType {
     Unknown,
 
-    Player(Player),
-    Mob,
+    PlayerType,
+    MobType,
 
-    Block,
-    Structure
+    BlockType,
+    StructureType
 }
 impl Default for EntityType {
     fn default() -> Self { EntityType::Unknown }
 }
 
-#[derive(Default, Component)]
+#[derive(Default, Component, Clone, Debug, PartialEq, Eq)]
 pub struct GameEntity {
     pub entity_type: EntityType,
 
     pub handle: Handle<Image>,
+    pub entity: Option<Entity>,
+    pub inventory: Vec<invs::Item>,
 
-    pub height: f32,
-    pub width: f32,
+
+    pub height: u32,
+    pub width: u32,
     pub position: Location,
-    pub dimensions: [u32; 2],
 
-
+    pub health: u32,
+    pub stamina: u32,
+    pub hunger: u32,
+    pub mana: u32
 }
 impl GameEntity {
-    pub fn new(hand: Handle<Image>) -> GameEntity {
-        GameEntity {
-            entity_type: EntityType::Unknown,
-            handle: hand,
-            position: Location::new(),
-            ..default()
-        }
+    pub fn new(ent: EntityType) -> GameEntity {
+        GameEntity { 
+            entity_type: ent,
+            ..default()}
+    }
+    pub fn add_inventory(&mut self, inv: Vec<invs::Item>) {
+        self.inventory = inv;
     }
 }
