@@ -129,6 +129,7 @@ fn keyboard_input_system(
 ) { 
     let mut player: GameEntity = GameEntity::new(EntityType::Unknown);
 
+    // todo fix the keyboard movement
     // for ent in entities.iter_mut() {
     //     if ent.entity_type == EntityType::PlayerType {
     //         player = *ent.into_inner();
