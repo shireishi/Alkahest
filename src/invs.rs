@@ -33,7 +33,7 @@ pub fn generate_attributes(attrs: Vec<ItemAttributes>) -> u8 {
     return_value
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ItemAttributes {
     Sword,
     Axe,
@@ -45,7 +45,7 @@ impl fmt::Display for ItemAttributes {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Default, Eq)]
 pub struct Item {
     item_name: String,
     item_id: String,

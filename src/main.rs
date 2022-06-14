@@ -2,7 +2,7 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 
-use std::{io, fmt, i64, f32};
+use std::{io, fmt, i64, f32, f64};
 use substring::Substring;
 use rand::{
     prelude::*,
@@ -50,7 +50,7 @@ use debug::*;
 const HEIGHT: f32 = 720.;
 const WIDTH: f32 = 1280.;
 
-const STEP: f32 = 5.;
+const STEP: i64 = 5;
 
 #[derive(Debug, Eq, Component, PartialEq)]
 enum Direction {
@@ -97,11 +97,11 @@ pub struct BackgroundSize {
 }
 
 // Game Structs //
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Location {
-    x: f32,
-    y: f32,
-    z: f32
+    x: i64,
+    y: i64,
+    z: i64
 }
 impl Location {
     fn new() -> Location {
@@ -151,8 +151,8 @@ fn keyboard_input_system(
     if moved {
         *transforms.get_mut(player.entity.unwrap()).unwrap() = Transform {
             translation: Vec3::new(
-                player.location.x,
-                player.location.y,
+                player.location.x as f32,
+                player.location.y as f32,
                 0f32
             ),
             ..default()
@@ -255,27 +255,28 @@ fn setup(
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     commands.insert_resource(BackgroundHandle::new(background_texture));
-    commands.insert_resource(player.add_handle(player_texture.clone()));
-
+    
+    player.add_handle(player_texture.clone());
+    
     player.entity = Some(
         commands
-            .spawn_bundle(TransformBundle::from(Transform {
+        .spawn_bundle(TransformBundle::from(Transform {
                 translation: Vec3::new(
-                    player.location.x,
-                    player.location.y,
+                    player.location.x as f32,
+                    player.location.y as f32,
                     1f32
                 ),
                 ..default()
             }))
-            .with_children(|player| {
-                    player.spawn_bundle(SpriteBundle {
+            .with_children(|p| {
+                    p.spawn_bundle(SpriteBundle {
                     texture: player_texture,
                     transform: Transform::from_xyz(0., 0., 1.),
                     ..default()
                 });
             })
             .id()
-    );
+        );
 }
 
 fn setup_bounds(
@@ -283,6 +284,7 @@ fn setup_bounds(
     mut app_state: ResMut<State<GameState>>,
     mut event_asset: EventReader<AssetEvent<Image>>,
     assets: Res<Assets<Image>>,
+    mut player: ResMut<Player>,
     bg: ResMut<BackgroundHandle>
 ) {
     for event in event_asset.iter() {
@@ -299,6 +301,11 @@ fn setup_bounds(
 
                     commands.insert_resource(bg_size);
                     app_state.set(GameState::Menu).unwrap();
+                }
+                if *handle == player.handle {
+                    let img = assets.get(player.handle.clone()).unwrap();
+                    player.dimensions = [img.texture_descriptor.size.height, img.texture_descriptor.size.width];
+                    info!("{:?}", player.clone());
                 }
             },
             _ => {
