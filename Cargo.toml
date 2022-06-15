@@ -7,6 +7,4 @@ default-run = "Alkahest"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.7.0"
-substring = "1.4.5"
-rand = "0.8.5"
+vtable = "0.1.7"
