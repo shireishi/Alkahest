@@ -1,7 +1,7 @@
 
 use super::{
     game::Location,
-    inventory::*
+    inventory::Item
 };
 
 pub struct Entity {
@@ -14,5 +14,5 @@ pub struct Entity {
 }
 
 pub struct Player {
-    inventory: Vec<inventory::Item>
+    inventory: Vec<Item>
 }

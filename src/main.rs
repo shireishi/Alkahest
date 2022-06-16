@@ -11,6 +11,9 @@ use std::{
 };
 
 use entity::*;
+use debug::*;
+use game::*;
+use inventory::*;
 
 fn main() {
     println!("Hello world!");
