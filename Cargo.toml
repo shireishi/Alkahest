@@ -8,3 +8,6 @@ default-run = "Alkahest"
 
 [dependencies]
 vtable = "0.1.7"
+bevy = "0.7.0"
+substring = "1.4.5"
+rand = "0.8.5"
