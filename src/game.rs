@@ -1,8 +1,3 @@
-use super::{
-    Component
-};
-
-#[derive(Clone, Copy, Debug, Eq, Component, PartialEq, Hash)]
 pub enum GameState {
     BackgroundInit,
     WorldInit,
@@ -10,4 +5,10 @@ pub enum GameState {
     Playing,
     Paused,
     End
+}
+
+pub struct Location {
+    x: f32,
+    y: f32,
+    z: f32
 }
