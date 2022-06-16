@@ -1,56 +1,24 @@
 #![allow(non_snake_case)]
 #![allow(unused_imports)]
-#![allow(dead_code)]
 
-use std::{io, fmt, i64, f32};
-use substring::Substring;
-use rand::{
-    prelude::*,
-    Rng
+use std::{
+    io, fmt, borrow::Borrow
 };
 
-use bevy::{
-    core::Timer,
-    prelude::default,
-    prelude::Component,
-    input::keyboard::KeyboardInput,
-    input::keyboard::KeyCode,
-    input::ElementState::{Pressed, Released},
-    render::render_resource::Texture,
-    
-    prelude::*,
-    app::*,
-    input::*,
-    ecs::*,
-    ecs::event::*,
-    window::*,
-    core::*,
-    log::*,
-    asset::*,
-    render::*,
-    math::*
-};
-
-mod invs;
-mod player;
 mod world;
-mod tools;
 mod object;
 mod entity;
 mod debug;
 mod game;
 
-use player::*;
-use tools::*;
-use invs::*;
 use world::*;
 use object::*;
 use entity::*;
 use debug::*;
 use game::*;
 
-const HEIGHT: f32 = 720.;
-const WIDTH: f32 = 1280.;
+struct Health(u32);
+struct Name(&'static str);
 
 const STEP: f32 = 5.; // the amount the player moves on each key press
 
@@ -176,20 +144,17 @@ fn menu_key_check(
 
 // Main Methods //
 fn main() {
-    let welcome_messages: Vec<&str> = vec![
-        "Welcome to the family",
-        "Now with the color purple!",
-        "Contains lethal amounts of sexman"
-    ];
+    let mut world: World = World::new();
+    let player: usize = world.new_entity();
 
-    let mut rng = thread_rng();
-    let rand_value = rng.gen_range(0 .. welcome_messages.len());
-    let app_name: String = std::format!("Alkahest - {}", welcome_messages[rand_value]);
+    world.add_comp(player, Health(100));
+    world.add_comp(player, Name("Helena"));
 
     let inventory: Vec<Item> = Vec::with_capacity(27usize);
     let mut player: GameEntity<Player> = GameEntity::new(Some(Player::new(inventory)));
 
-    let game: Game = Game::new(HEIGHT, WIDTH);
+    let zip = health.iter_mut().zip(name.iter_mut());
+    let iter = zip.filter_map(|(health, name)| Some((health.as_mut()?, name.as_mut()?)));
 
     App::new() // Bevy window creation
     
