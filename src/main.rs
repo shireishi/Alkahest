@@ -38,6 +38,7 @@ mod tools;
 mod object;
 mod entity;
 mod debug;
+mod game;
 
 use player::*;
 use tools::*;
@@ -46,11 +47,12 @@ use world::*;
 use object::*;
 use entity::*;
 use debug::*;
+use game::*;
 
 const HEIGHT: f32 = 720.;
 const WIDTH: f32 = 1280.;
 
-const STEP: f32 = 5.;
+const STEP: f32 = 5.; // the amount the player moves on each key press
 
 #[derive(Debug, Eq, Component, PartialEq)]
 enum Direction {
@@ -65,15 +67,6 @@ impl fmt::Display for Direction {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Component, PartialEq, Hash)]
-enum GameState {
-    BackgroundInit,
-    WorldInit,
-    Menu,
-    Playing,
-    Paused,
-    End
-}
 
 #[derive(Default, Clone, Debug, Eq, PartialEq, Component, Hash)]
 struct BackgroundHandle {
@@ -164,7 +157,7 @@ fn check_collision(
     _commands: Commands,
     mut players: Query<&mut Player>,
     _objects: Res<GameObject>,
-    _entities: Res<GameEntity>
+    _entities: Res<GameEntity<Player>>
 ) {
     for player in players.iter_mut() {
         info!("{:?}", player.location);
@@ -194,7 +187,7 @@ fn main() {
     let app_name: String = std::format!("Alkahest - {}", welcome_messages[rand_value]);
 
     let inventory: Vec<Item> = Vec::with_capacity(27usize);
-    let player: Player = Player::new(inventory);
+    let mut player: GameEntity<Player> = GameEntity::new(Some(Player::new(inventory)));
 
     let game: Game = Game::new(HEIGHT, WIDTH);
 
@@ -244,7 +237,7 @@ fn main() {
 fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut player: ResMut<Player>
+    mut player: ResMut<GameEntity<Player>>
 ) {
     // let (r, g, b) = from_hex("00cc00".to_string()); //debug color
 

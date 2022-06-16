@@ -10,12 +10,6 @@ use super::{
     Vec3
 };
 
-struct TextureMap {
-    texture: String,
-    color: Vec3,
-    height: f32
-}
-
 #[derive(Default)]
 pub struct Game {
     pub world_mesh: Vec<Vec<f32>>,
