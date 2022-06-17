@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 
 use super::{
     game::Location,
@@ -53,5 +54,26 @@ pub struct Player {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         
         write!(f, "{}", self)
+    }
+}
+
+pub struct HostileMob;
+impl HostileMob {
+    pub fn new() -> HostileMob{
+        HostileMob{}
+    }
+}
+impl fmt::Display for HostileMob {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let formatted_string: String = "Hostile Mob".to_string();
+
+        write!(f, "{}", formatted_string)
+    }
+}
+impl fmt::Debug for HostileMob {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let formatted_string: String = "Hostile Mob Debug".to_string();
+
+        write!(f, "{}", formatted_string)
     }
 }

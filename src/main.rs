@@ -22,6 +22,5 @@ fn main() {
     inventory.push(Item::new("Stone".to_string(), vec![ItemAttributes::Misc]));
 
     let player: Entity<Player> = Entity::new(Some(Player::new(inventory)));
-
     println!("{:?}", player.entity.unwrap());
 }
