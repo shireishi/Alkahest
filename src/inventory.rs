@@ -14,16 +14,16 @@ pub fn new() -> Vec<Item> {
 }
 
 fn gen_hash(data: String) -> String {
-    let char_vec: Vec<char> = data.chars().collect();
-    let vec_size: usize = char_vec.len();
-    let mut hex_vec: Vec<String> = Vec::with_capacity(vec_size);
+    let char_vec: Vec<char> = data.chars().collect(); // convert the data string into a character vec
+    let vec_size: usize = char_vec.len(); // store the vector size
+    let mut hex_vec: Vec<String> = Vec::with_capacity(vec_size); // allocate the hex vector
     
-    for i in 0 .. vec_size {
-        let to_app = char_vec[i] as u8 / vec_size as u8;
-        hex_vec.push(std::format!("{:x}", to_app));
+    for i in 0 .. vec_size { // iterate through each character
+        let to_app = char_vec[i] as u8 / vec_size as u8; // set to_app to the ordinal value of the char divided by the length of the data set
+        hex_vec.push(std::format!("{:x}", to_app)); // append the string formatted hex value to the hex vector
     };
 
-    String::from(hex_vec.join(""))
+    String::from(hex_vec.join("")) // combine the hex vector
 }
 
 fn generate_attributes(attrs: Vec<ItemAttributes>) -> u8 {
@@ -42,6 +42,7 @@ pub enum ItemAttributes {
     Sword,
     Axe,
     Shield,
+    Misc
 }
 impl fmt::Display for ItemAttributes {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -51,9 +52,9 @@ impl fmt::Display for ItemAttributes {
 
 #[derive(Clone, PartialEq, Default, Eq)]
 pub struct Item {
-    item_name: String,
-    item_id: String,
-    attributes: Vec<ItemAttributes>
+    pub item_name: String,
+    pub item_id: String,
+    pub attributes: Vec<ItemAttributes>
 }
 impl Item {
     pub fn new(name: String, attrs: Vec<ItemAttributes>) -> Item {

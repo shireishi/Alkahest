@@ -2,6 +2,13 @@
 Alkahest is a WIP 2D Indie game that will essentially combine the primary features of Skyrim, Starbound, and Terraria.
 
 # Progress
+## Setup
+- [x] Integrate the inventory with player entity creation
+- [ ] Set up the window 
+- [ ] Add the ability to draw assets to the window
+- [ ] Add the ability to move assets on the window
+- [ ] Add entity collision
+
 ## Alpha
 - [ ] Design a proof of concept using a Rust game engine
 - [ ] Integrate custom assets
