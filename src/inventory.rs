@@ -37,7 +37,7 @@ fn generate_attributes(attrs: Vec<ItemAttributes>) -> u8 {
     return_value
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub enum ItemAttributes {
     Sword,
     Axe,
@@ -52,16 +52,16 @@ impl fmt::Display for ItemAttributes {
 
 #[derive(Clone, PartialEq, Default, Eq)]
 pub struct Item {
-    pub item_name: String,
-    pub item_id: String,
+    pub name: String,
+    pub id: String,
     pub attributes: Vec<ItemAttributes>
 }
 impl Item {
     pub fn new(name: String, attrs: Vec<ItemAttributes>) -> Item {
         let id: String = gen_hash(name.clone());
         let to_ret: Item = Item {
-            item_name: name,
-            item_id: id,
+            name: name,
+            id: id,
             attributes: attrs
         };
         unsafe {
@@ -89,8 +89,8 @@ impl fmt::Debug for Item {
         let attr_field: String = std::format!("{} {} {}", binary_value, attributes, attribute_string);
 
         f.debug_struct("Item")
-            .field("Name", &self.item_name)
-            .field("Item ID", &self.item_id)
+            .field("Name", &self.name)
+            .field("Item ID", &self.id)
             .field("Attributes", &attr_field)
             .finish()
     }
