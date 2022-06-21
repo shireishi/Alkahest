@@ -17,22 +17,31 @@ use inventory::*;
 
 fn update(mut world: World) { 
     world.component_update();
+    world.systems_update();
+}
+
+pub fn test(world: &World) {
+    println!("{:?}", world.mobs);
+    println!("Hello World from the test function!");
 }
 
 fn main() {
     let mut inventory: Vec<Item> = Vec::with_capacity(27usize);
-    inventory.push(Item::new("Diamond Sword".to_string(), vec![ItemAttributes::Sword]));
-    inventory.push(Item::new("Stone".to_string(), vec![ItemAttributes::Misc]));
+    inventory.push(Item::new(
+        "Diamond Sword".to_string(),
+        vec![ItemAttributes::Sword])
+    );
 
-    let player = Entity::new(Some(Player::new("Keyshin_".to_string(), inventory)));
-    let _mob = Entity::new(Some(Mob::new()));
-    let _hostile = Entity::new(Some(Hostile::new()));
+    let mut player = Entity::new(Some(Player::new("Keyshin_".to_string(), inventory)));
+    player.add_component(vec![Components::KeyboardInput, Components::Collision]);
+
+    let stalker = Entity::new(Some(Mob::new()));
 
     let mut world: World = World::new();
 
     world.insert(&player);
-    // world.insert(&mob);
-    // world.insert(&hostile);
+    world.insert(&stalker);
+    world.add_system(&test);
 
     update(setup(world));
 }

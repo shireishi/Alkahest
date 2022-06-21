@@ -9,10 +9,21 @@ use std::{
     io, fmt
 };
 
+#[derive(Clone, Copy, Debug)]
+pub enum Components {
+    KeyboardInput,
+    HostileAI,
+    IdleAI,
+    NeutralAI,
+    PeacefulAI,
+    Collision
+}
+
 #[derive(Clone)]
 pub struct Entity<T> {
     pub entity: Option<T>,
     pub location: Location,
+    pub components: Vec<Components>,
     
     pub health: f32,
     pub stamina: f32,
@@ -23,12 +34,63 @@ pub struct Entity<T> {
         Self {
             entity,
             location: Location::new(),
+            components: Vec::new(),
 
             health: 100.,
             stamina: 100.,
             hunger: 100.,
             mana: 0.
         }
+    }
+    pub fn add_component(&mut self, components: Vec<Components>) {
+        for i in 0 .. components.len() {
+            self.components.push(components[i]);
+        }
+    }
+}
+impl fmt::Display for Entity<Player> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", &self)
+    }
+}
+impl fmt::Debug for Entity<Player> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut formatted_string = "".to_string();
+        for component in self.components.iter() {
+            formatted_string += &format!("{:?}\n", component);
+        }
+
+        write!(f, "{}", formatted_string)
+    }
+}
+impl fmt::Display for Entity<Mob> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", &self)
+    }
+}
+impl fmt::Debug for Entity<Mob> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut formatted_string = "".to_string();
+        for component in self.components.iter() {
+            formatted_string += &format!("{:?}\n", component);
+        }
+
+        write!(f, "{}", formatted_string)
+    }
+}
+impl fmt::Display for Entity<Hostile> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", &self)
+    }
+}
+impl fmt::Debug for Entity<Hostile> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut formatted_string = "".to_string();
+        for component in self.components.iter() {
+            formatted_string += &format!("{:?}\n", component);
+        }
+
+        write!(f, "{}", formatted_string)
     }
 }
 
